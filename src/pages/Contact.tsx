@@ -16,8 +16,6 @@ export function Contact() {
       name: formData.get("name"),
       email: formData.get("email"),
       message: formData.get("message"),
-      business: "Not specified",
-      needs: "General Enquiry"
     };
 
     try {
@@ -93,13 +91,12 @@ export function Contact() {
                 </h2>
                 <div className="w-full h-[1px] bg-white/20 mb-8 md:mb-12" />
                 <p className="font-mono text-xs uppercase tracking-widest flex flex-col sm:flex-row items-center justify-center gap-2 mb-12">
-                  <span className="opacity-60">or write directly</span>
+                  <span className="opacity-60">or write directly to</span>
                   <a href="mailto:northlinestudiossuffolk@outlook.com" className="border-b border-white hover:opacity-80 transition-opacity pb-1">
                     northlinestudiossuffolk@outlook.com
                   </a>
                 </p>
-                
-                {/* Minimalist form expanding below */}
+
                 <form ref={formRef} onSubmit={handleSubmit} className="w-full space-y-8 text-left">
                   <div>
                     <input
