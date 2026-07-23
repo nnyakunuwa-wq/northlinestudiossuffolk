@@ -1,13 +1,44 @@
-import { useState, FormEvent } from "react";
+import { useState, FormEvent, useRef } from "react";
 import { motion } from "motion/react";
 
 export function Contact() {
-  const [status, setStatus] = useState<"idle" | "submitting" | "success">("idle");
+  const [status, setStatus] = useState<"idle" | "submitting" | "success" | "error">("idle");
+  const [errorMessage, setErrorMessage] = useState("");
+  const formRef = useRef<HTMLFormElement>(null);
 
-  const handleSubmit = (e: FormEvent<HTMLFormElement>) => {
+  const handleSubmit = async (e: FormEvent<HTMLFormElement>) => {
     e.preventDefault();
     setStatus("submitting");
-    setTimeout(() => setStatus("success"), 1000);
+    setErrorMessage("");
+
+    const formData = new FormData(e.currentTarget);
+    const data = {
+      name: formData.get("name"),
+      email: formData.get("email"),
+      message: formData.get("message"),
+      business: "Not specified",
+      needs: "General Enquiry"
+    };
+
+    try {
+      const response = await fetch('/api/contact', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify(data)
+      });
+      
+      if (response.ok) {
+        setStatus("success");
+        formRef.current?.reset();
+      } else {
+        const errorData = await response.json();
+        setStatus("error");
+        setErrorMessage(errorData.error || "Failed to send message.");
+      }
+    } catch (error) {
+      setStatus("error");
+      setErrorMessage(error instanceof Error ? error.message : "Failed to send message.");
+    }
   };
 
   return (
@@ -63,15 +94,16 @@ export function Contact() {
                 <div className="w-full h-[1px] bg-white/20 mb-8 md:mb-12" />
                 <p className="font-mono text-xs uppercase tracking-widest flex flex-col sm:flex-row items-center justify-center gap-2 mb-12">
                   <span className="opacity-60">or write directly</span>
-                  <a href="mailto:hello@northlinestudios.com" className="border-b border-white hover:opacity-80 transition-opacity pb-1">
-                    hello@northlinestudios.com
+                  <a href="mailto:northlinestudiossuffolk@outlook.com" className="border-b border-white hover:opacity-80 transition-opacity pb-1">
+                    northlinestudiossuffolk@outlook.com
                   </a>
                 </p>
                 
                 {/* Minimalist form expanding below */}
-                <form onSubmit={handleSubmit} className="w-full space-y-8 text-left">
+                <form ref={formRef} onSubmit={handleSubmit} className="w-full space-y-8 text-left">
                   <div>
                     <input
+                      name="name"
                       type="text"
                       required
                       placeholder="YOUR NAME"
@@ -80,6 +112,7 @@ export function Contact() {
                   </div>
                   <div>
                     <input
+                      name="email"
                       type="email"
                       required
                       placeholder="EMAIL ADDRESS"
@@ -88,14 +121,20 @@ export function Contact() {
                   </div>
                   <div>
                     <textarea
+                      name="message"
                       required
                       placeholder="PROJECT DETAILS"
                       rows={3}
                       className="w-full bg-transparent border-b border-white/30 px-0 py-3 text-white placeholder:text-white/50 focus:outline-none focus:border-white font-mono text-xs md:text-sm uppercase tracking-wider transition-colors resize-none"
                     />
                   </div>
+                  {status === "error" && errorMessage && (
+                    <div className="text-red-400 font-mono text-xs uppercase tracking-widest mt-4">
+                      {errorMessage}
+                    </div>
+                  )}
                   <button type="submit" className="font-mono text-xs md:text-sm uppercase tracking-widest border border-white px-8 py-4 hover:bg-white hover:text-brand-blue transition-colors w-full">
-                    {status === "submitting" ? "SENDING..." : "SUBMIT"}
+                    {status === "submitting" ? "SENDING..." : status === "error" ? "ERROR - TRY AGAIN" : "SUBMIT"}
                   </button>
                 </form>
               </div>

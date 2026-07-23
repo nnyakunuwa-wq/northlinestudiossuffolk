@@ -1,6 +1,9 @@
 import { motion } from "motion/react";
+import { useAppData } from "../lib/data-service";
 
 export function About() {
+  const { settings } = useAppData();
+
   return (
     <div className="min-h-[100dvh] pt-32 pb-20 px-6 md:px-12 flex flex-col relative bg-brand-bg text-brand-dark">
       <div className="absolute top-0 bottom-0 left-[33%] w-[1px] bg-brand-blue/20 hidden lg:block" />
@@ -30,11 +33,8 @@ export function About() {
             className="grid md:grid-cols-2 gap-12 text-lg font-medium text-brand-dark/80 leading-relaxed"
           >
             <div>
-              <p className="mb-6">
-                [Founder Story Placeholder] I started Northline Studios because I saw too many great local businesses struggling with outdated websites—or no website at all. I wanted to create a straightforward, high-quality service that takes the technical headache away from business owners.
-              </p>
-              <p>
-                [Bio Placeholder] I believe a good website shouldn't just look pretty; it should be an engine that brings in new clients and builds trust instantly.
+              <p className="mb-6 whitespace-pre-wrap">
+                {settings.aboutBio || "Hi, I'm Ndinashe. I'm a 14-year-old web developer who started Northline Studios because I saw too many great local businesses struggling with outdated websites—or no website at all.\n\nI've always loved helping my local community, and I realized that building clean, professional websites is one of the best ways I can support the hardworking business owners that make our area special. I wanted to create a straightforward, high-quality service that takes the technical headache away so you can focus on running your business."}
               </p>
             </div>
             <div className="flex flex-col">

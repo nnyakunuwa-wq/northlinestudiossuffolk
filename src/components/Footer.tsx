@@ -1,4 +1,4 @@
-import { useLocation } from "react-router-dom";
+import { useLocation, Link } from "react-router-dom";
 import { cn } from "../lib/utils";
 
 export function Footer() {
@@ -13,9 +13,11 @@ export function Footer() {
           Northline Studios &copy; {new Date().getFullYear()}
         </div>
         <div className="flex gap-6 font-mono text-xs uppercase tracking-widest opacity-80">
-          <a href="#" className="hover:opacity-100 transition-opacity">Privacy</a>
+          <Link to="/privacy" className="hover:opacity-100 transition-opacity">Privacy</Link>
           <span className="opacity-40">/</span>
-          <a href="#" className="hover:opacity-100 transition-opacity">Terms</a>
+          <Link to="/terms" className="hover:opacity-100 transition-opacity">Terms</Link>
+          <span className="opacity-40">/</span>
+          <Link to="/admin" className="hover:opacity-100 transition-opacity">Admin</Link>
         </div>
       </div>
     </footer>

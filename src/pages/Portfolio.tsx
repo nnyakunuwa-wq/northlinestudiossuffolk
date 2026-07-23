@@ -1,8 +1,10 @@
-import { portfolioItems } from "../data";
+import { useAppData } from "../lib/data-service";
 import { motion } from "motion/react";
 import { ArrowUpRight } from "lucide-react";
 
 export function Portfolio() {
+  const { portfolio } = useAppData();
+
   return (
     <div className="min-h-screen bg-brand-blue text-white pt-32 pb-20 px-6 md:px-12 flex flex-col">
       <div className="max-w-[1400px] mx-auto w-full flex-grow flex flex-col">
@@ -24,21 +26,21 @@ export function Portfolio() {
           </div>
           <div className="flex flex-col justify-between items-start md:items-end">
             <div className="font-mono text-xs tracking-widest uppercase mb-8 md:mb-12">
-              Active 01 / 0{portfolioItems.length}
+              Active 01 / {portfolio.length < 10 ? `0${portfolio.length}` : portfolio.length}
             </div>
             <p className="text-lg md:text-xl md:text-right max-w-md opacity-90 leading-relaxed">
-              Product, interface and web-system work — resolved as one connected surface.
+              Product, interface and web system work resolved as one connected surface.
             </p>
           </div>
         </div>
 
         {/* List */}
         <div className="flex flex-col w-full">
-          {portfolioItems.map((item, i) => (
+          {portfolio.map((item, i) => (
             <motion.a
-              href={item.link}
-              target="_blank"
-              rel="noopener noreferrer"
+              href={item.link || "#"}
+              target={item.link ? "_blank" : "_self"}
+              rel={item.link ? "noopener noreferrer" : ""}
               key={item.id}
               initial={{ opacity: 0, y: 10 }}
               animate={{ opacity: 1, y: 0 }}
@@ -48,7 +50,7 @@ export function Portfolio() {
               <div className="md:col-span-4 font-mono text-xs tracking-widest uppercase opacity-70 hidden lg:flex flex-col gap-2">
                 {i === 0 && (
                   <>
-                    <span>[ {new Date().getFullYear()} · WEB LAUNCH ]</span>
+                    <span>[ {new Date(item.createdAt || Date.now()).getFullYear()} · WEB LAUNCH ]</span>
                     <span>DIRECTION · FRONTEND</span>
                   </>
                 )}
@@ -60,8 +62,8 @@ export function Portfolio() {
                 </h2>
                 <div className="flex items-center gap-6 self-start md:self-auto">
                   <div className="flex items-center gap-4 font-mono text-xs tracking-widest uppercase">
-                    <span className="border border-white/30 px-2 py-1 leading-none rounded-sm">0{i + 1}</span>
-                    <span className="opacity-70 whitespace-nowrap">{item.tags[0] || 'WEBSITE'}</span>
+                    <span className="border border-white/30 px-2 py-1 leading-none rounded-sm">{i + 1 < 10 ? `0${i + 1}` : i + 1}</span>
+                    <span className="opacity-70 whitespace-nowrap">{item.tags?.[0] || 'WEBSITE'}</span>
                   </div>
                   <ArrowUpRight className="w-8 h-8 opacity-0 group-hover:opacity-100 transition-opacity hidden md:block" />
                 </div>

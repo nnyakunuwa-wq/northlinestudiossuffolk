@@ -1,6 +1,7 @@
 import { Link, useLocation } from "react-router-dom";
 import { useState } from "react";
 import { cn } from "../lib/utils";
+import logoImg from "../assets/images/regenerated_image_1784844489904.png";
 
 const navLinks = [
   { num: "01", name: "Home", path: "/" },
@@ -21,8 +22,12 @@ export function Header() {
     <>
       <header className={cn("fixed top-0 inset-x-0 z-40 transition-colors duration-300", textColor)}>
         <div className="flex h-24 items-center justify-between px-6 md:px-12">
-          <Link to="/" className="text-2xl font-bold tracking-tighter" onClick={() => setIsOpen(false)}>
-            Northline
+          <Link to="/" onClick={() => setIsOpen(false)}>
+            <img 
+              src={logoImg} 
+              alt="Northline Studios" 
+              className={cn("h-10 w-auto transition-all duration-300 mix-blend-multiply", isDarkBg && "brightness-0 invert mix-blend-screen")} 
+            />
           </Link>
 
           <button

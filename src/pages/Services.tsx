@@ -1,8 +1,11 @@
-import { packages, addons } from "../data";
+import { addons } from "../data";
 import { motion } from "motion/react";
 import { Link } from "react-router-dom";
+import { useAppData } from "../lib/data-service";
 
 export function Services() {
+  const { packages } = useAppData();
+
   return (
     <div className="min-h-screen pt-32 pb-20 px-6 md:px-12 flex flex-col relative bg-brand-dark text-white">
       <div className="max-w-[1400px] mx-auto w-full">
@@ -30,7 +33,7 @@ export function Services() {
               className="flex flex-col p-8 border-r border-b border-white/10 hover:bg-white/5 transition-colors"
             >
               <h3 className="text-3xl font-bold tracking-tighter mb-4">{pkg.name}</h3>
-              <p className="text-brand-blue text-4xl font-mono tracking-tighter mb-8">{pkg.price}</p>
+              <p className="text-white text-6xl md:text-7xl font-extrabold tracking-tighter mb-8">{pkg.price}</p>
               <p className="text-sm opacity-70 mb-12 h-16">{pkg.description}</p>
               
               <ul className="space-y-4 mb-12 flex-grow">
@@ -42,8 +45,8 @@ export function Services() {
                 ))}
               </ul>
               
-              <Link to="/contact" className="font-mono text-xs tracking-widest uppercase py-4 border border-white/20 text-center hover:bg-white hover:text-brand-dark transition-colors block">
-                Select
+              <Link to="/contact" className="font-mono text-xs tracking-widest uppercase py-4 border border-white/20 text-center hover:bg-white hover:text-brand-dark transition-colors block font-bold">
+                SELECT
               </Link>
             </motion.div>
           ))}
@@ -52,31 +55,31 @@ export function Services() {
         {/* Addons */}
         <div className="mt-24 grid lg:grid-cols-2 gap-12 border-t border-white/10 pt-16">
           <div>
-            <h2 className="text-3xl font-bold tracking-tighter mb-8">Add-ons</h2>
+            <h2 className="text-4xl font-bold tracking-tighter mb-8 text-white">Addons</h2>
             <div className="space-y-6 lg:border-l border-white/10 lg:pl-6">
               {addons.map((addon) => (
                 <div key={addon.name} className="flex flex-col sm:flex-row sm:justify-between sm:items-baseline gap-2 border-b border-white/10 pb-6">
                   <div>
-                    <h4 className="text-lg font-bold tracking-tighter">{addon.name}</h4>
-                    {addon.description && <p className="text-sm opacity-60 mt-1">{addon.description}</p>}
+                    <h4 className="text-xl font-bold tracking-tighter text-white">{addon.name}</h4>
+                    {addon.description && <p className="text-sm opacity-80 mt-1">{addon.description}</p>}
                   </div>
-                  <span className="font-mono text-sm text-brand-blue tracking-tighter">{addon.price}</span>
+                  <span className="font-bold text-2xl text-white tracking-tighter">{addon.price}</span>
                 </div>
               ))}
             </div>
           </div>
 
           <div>
-            <h2 className="text-3xl font-bold tracking-tighter mb-8">Good to Know</h2>
+            <h2 className="text-4xl font-bold tracking-tighter mb-8 text-white">Good to Know</h2>
             <div className="space-y-6 lg:border-l border-white/10 lg:pl-6">
               {[
-                "2 rounds of revisions included before final delivery.",
                 "Client keeps their existing domain.",
+                "If you do not have a domain, you will have to pay a monthly fee for one (charged annually).",
                 "Hosting is included at no extra cost.",
                 "Payment: 50% upfront, 50% on final delivery."
               ].map((text, i) => (
-                <p key={i} className="flex gap-4 text-sm opacity-80 border-b border-white/10 pb-6">
-                  <span className="text-brand-blue font-mono">0{i+1}</span>
+                <p key={i} className="flex gap-4 text-base font-medium opacity-90 border-b border-white/10 pb-6">
+                  <span className="text-brand-blue font-bold font-mono">0{i+1}</span>
                   {text}
                 </p>
               ))}

@@ -11,7 +11,10 @@ import { Services } from "./pages/Services";
 import { Portfolio } from "./pages/Portfolio";
 import { About } from "./pages/About";
 import { Contact } from "./pages/Contact";
-import { useEffect } from "react";
+import { Privacy } from "./pages/Privacy";
+import { Terms } from "./pages/Terms";
+import { Admin } from "./pages/Admin";
+import React, { useEffect } from "react";
 import { cn } from "./lib/utils";
 
 // ScrollToTop component to ensure pages start at the top on navigation
@@ -52,6 +55,9 @@ export default function App() {
             <Route path="/portfolio" element={<Portfolio />} />
             <Route path="/about" element={<About />} />
             <Route path="/contact" element={<Contact />} />
+            <Route path="/privacy" element={<Privacy />} />
+            <Route path="/terms" element={<Terms />} />
+            <Route path="/admin" element={<Admin />} />
           </Routes>
         </main>
         <Footer />

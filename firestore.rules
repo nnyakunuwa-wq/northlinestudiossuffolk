@@ -1,0 +1,88 @@
+rules_version = '2';
+service cloud.firestore {
+  match /databases/{database}/documents {
+    match /{document=**} {
+      allow read, write: if false;
+    }
+
+    function isSignedIn() {
+      return request.auth != null;
+    }
+
+    function isVerified() {
+      return isSignedIn() && request.auth.token.email_verified == true;
+    }
+
+    function isAdmin() {
+      return isVerified() && request.auth.token.email == 'nnyakunuwa@gmail.com';
+    }
+
+    // Validation helpers
+    function isValidPortfolioItem(data) {
+      return data.keys().hasAll(['title', 'description', 'createdAt']) &&
+             data.title is string && data.title.size() <= 100 &&
+             data.description is string && data.description.size() <= 500 &&
+             data.createdAt is number &&
+             (data.get('link', '') is string && data.get('link', '').size() <= 200) &&
+             (data.get('tags', []) is list && (data.get('tags', []).size() == 0 || data.get('tags', [])[0] is string)) &&
+             (data.get('order', 0) is number);
+    }
+
+    function isValidTestimonial(data) {
+      return data.keys().hasAll(['client', 'business', 'quote', 'createdAt']) &&
+             data.client is string && data.client.size() <= 100 &&
+             data.business is string && data.business.size() <= 100 &&
+             data.quote is string && data.quote.size() <= 500 &&
+             data.createdAt is number;
+    }
+
+    function isValidPackage(data) {
+      return data.keys().hasAll(['name', 'price']) &&
+             data.name is string && data.name.size() <= 100 &&
+             data.price is string && data.price.size() <= 50 &&
+             (data.get('description', '') is string && data.get('description', '').size() <= 300) &&
+             (data.get('features', []) is list && (data.get('features', []).size() == 0 || data.get('features', [])[0] is string)) &&
+             (data.get('order', 0) is number);
+    }
+
+    function isValidContent(data) {
+      return (data.get('aboutBio', '') is string && data.get('aboutBio', '').size() <= 2000);
+    }
+
+    function incoming() {
+      return request.resource.data;
+    }
+
+    function existing() {
+      return resource.data;
+    }
+
+    match /portfolio/{itemId} {
+      allow read: if true;
+      allow create: if isAdmin() && isValidPortfolioItem(incoming());
+      allow update: if isAdmin() && isValidPortfolioItem(incoming());
+      allow delete: if isAdmin();
+    }
+
+    match /testimonials/{itemId} {
+      allow read: if true;
+      allow create: if isAdmin() && isValidTestimonial(incoming());
+      allow update: if isAdmin() && isValidTestimonial(incoming());
+      allow delete: if isAdmin();
+    }
+
+    match /packages/{itemId} {
+      allow read: if true;
+      allow create: if isAdmin() && isValidPackage(incoming());
+      allow update: if isAdmin() && isValidPackage(incoming());
+      allow delete: if isAdmin();
+    }
+
+    match /settings/{docId} {
+      allow read: if true;
+      allow create: if isAdmin() && isValidContent(incoming());
+      allow update: if isAdmin() && isValidContent(incoming());
+      allow delete: if isAdmin();
+    }
+  }
+}

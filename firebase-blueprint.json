@@ -1,0 +1,69 @@
+{
+  "entities": {
+    "PortfolioItem": {
+      "title": "Portfolio Item",
+      "description": "A project displayed in the portfolio.",
+      "type": "object",
+      "properties": {
+        "title": { "type": "string", "maxLength": 100 },
+        "description": { "type": "string", "maxLength": 500 },
+        "link": { "type": "string", "maxLength": 200 },
+        "tags": { "type": "array", "items": { "type": "string", "maxLength": 50 } },
+        "order": { "type": "number" },
+        "createdAt": { "type": "number" }
+      },
+      "required": ["title", "description", "createdAt"]
+    },
+    "Testimonial": {
+      "title": "Testimonial",
+      "description": "A client testimonial.",
+      "type": "object",
+      "properties": {
+        "client": { "type": "string", "maxLength": 100 },
+        "business": { "type": "string", "maxLength": 100 },
+        "quote": { "type": "string", "maxLength": 500 },
+        "createdAt": { "type": "number" }
+      },
+      "required": ["client", "business", "quote", "createdAt"]
+    },
+    "Package": {
+      "title": "Service Package",
+      "description": "A pricing package for services.",
+      "type": "object",
+      "properties": {
+        "name": { "type": "string", "maxLength": 100 },
+        "price": { "type": "string", "maxLength": 50 },
+        "description": { "type": "string", "maxLength": 300 },
+        "features": { "type": "array", "items": { "type": "string", "maxLength": 100 } },
+        "order": { "type": "number" }
+      },
+      "required": ["name", "price"]
+    },
+    "Content": {
+      "title": "Site Content",
+      "description": "General site content (like bio).",
+      "type": "object",
+      "properties": {
+        "aboutBio": { "type": "string", "maxLength": 2000 }
+      }
+    }
+  },
+  "firestore": {
+    "portfolio": {
+      "schema": "PortfolioItem",
+      "description": "Collection of portfolio projects."
+    },
+    "testimonials": {
+      "schema": "Testimonial",
+      "description": "Collection of client testimonials."
+    },
+    "packages": {
+      "schema": "Package",
+      "description": "Collection of service packages."
+    },
+    "settings": {
+      "schema": "Content",
+      "description": "Site global content settings (e.g., bio)."
+    }
+  }
+}
