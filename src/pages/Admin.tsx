@@ -1,12 +1,14 @@
 import { useState, useEffect, FormEvent } from "react";
 import { auth, db } from "../lib/firebase";
-import { signInWithPopup, GoogleAuthProvider, signOut } from "firebase/auth";
+import { signInWithEmailAndPassword, createUserWithEmailAndPassword, signOut } from "firebase/auth";
 import { useAppData } from "../lib/data-service";
 import { collection, addDoc, updateDoc, deleteDoc, doc, setDoc } from "firebase/firestore";
 import { portfolioItems as defaultPortfolio, testimonials as defaultTestimonials, packages as defaultPackages } from "../data";
 
 export function Admin() {
   const [user, setUser] = useState(auth.currentUser);
+  const [password, setPassword] = useState("");
+  const [errorMsg, setErrorMsg] = useState("");
   const { portfolio, testimonials, packages, settings, loading } = useAppData();
 
   useEffect(() => {
@@ -14,13 +16,30 @@ export function Admin() {
     return unsub;
   }, []);
 
-  const handleLogin = async () => {
-    const provider = new GoogleAuthProvider();
+  const handleLogin = async (e: FormEvent) => {
+    e.preventDefault();
+    setErrorMsg("");
+    
+    if (password !== "northlinestudios.26") {
+      setErrorMsg("Incorrect password.");
+      return;
+    }
+
+    const email = "nnyakunuwa@gmail.com";
     try {
-      await signInWithPopup(auth, provider);
-    } catch (error) {
-      console.error(error);
-      alert("Login failed");
+      await signInWithEmailAndPassword(auth, email, password);
+    } catch (error: any) {
+      if (error.code === 'auth/user-not-found' || error.code === 'auth/invalid-credential') {
+        try {
+          await createUserWithEmailAndPassword(auth, email, password);
+        } catch (createError: any) {
+          console.error(createError);
+          setErrorMsg("Failed to create admin user: " + createError.message);
+        }
+      } else {
+        console.error(error);
+        setErrorMsg("Login failed: " + error.message);
+      }
     }
   };
 
@@ -77,9 +96,21 @@ export function Admin() {
     return (
       <div className="min-h-screen pt-32 pb-20 px-6 bg-brand-bg text-brand-dark flex flex-col items-center justify-center">
         <h1 className="text-4xl font-bold tracking-tighter mb-8">Admin Access</h1>
-        <button onClick={handleLogin} className="px-8 py-4 bg-brand-blue text-white font-mono text-sm tracking-widest uppercase hover:bg-opacity-90">
-          Sign in with Google
-        </button>
+        <form onSubmit={handleLogin} className="flex flex-col items-center gap-4 w-full max-w-xs">
+          <input
+            type="password"
+            value={password}
+            onChange={(e) => setPassword(e.target.value)}
+            placeholder="Enter Admin Password"
+            className="w-full p-4 border border-brand-dark/20 bg-white font-mono text-sm"
+          />
+          <button type="submit" className="w-full px-8 py-4 bg-brand-blue text-white font-mono text-sm tracking-widest uppercase hover:bg-opacity-90">
+            Login
+          </button>
+        </form>
+        {errorMsg && (
+          <p className="mt-4 text-red-500 font-mono text-xs uppercase tracking-widest">{errorMsg}</p>
+        )}
       </div>
     );
   }
