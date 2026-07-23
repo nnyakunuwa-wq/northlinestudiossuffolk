@@ -49,7 +49,7 @@ async function startServer() {
 
       const { data, error } = await resend.emails.send({
         from: 'Northline Studios <onboarding@resend.dev>',
-        to: ['nnyakunuwa@gmail.com'], // Free tier limit: can only send to verified emails
+        to: ['northlinestudiossuffolk@outlook.com'], // Free tier limit: can only send to verified emails
         reply_to: email,
         subject: `New Enquiry: ${name}`,
         html: htmlEmail,
